@@ -1,0 +1,6 @@
+>>> from graphe import *
+>>> from ameliorations import *
+
+>>> G = Graphe()
+>>> fichier = "DONNEES/RER_A.txt"
+>>> charger_donnees(G, fichier)

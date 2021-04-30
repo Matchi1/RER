@@ -1,0 +1,8 @@
+- Graphe.py 								(OK mais vérif à faire)
+- charger_donnees (function)
+- points_articulations (function)
+- ponts (function)
+- amelioration_ponts (function)
+- amelioration_points_articulations (function)
+- Elimination des ponts
+- Elimination des points d'articulations
