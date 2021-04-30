@@ -41,3 +41,12 @@ def points_articulation(graphe):
             if parent[v] not in articulations:
                 articulations.append(parent[v])
     return articulations
+
+def ponts(graphe):
+    p = list()
+    debut, parent, ancetre = numerotations(graphe)
+    for v in sorted(graphe.sommets()): 
+        if parent[v] != None:
+            if ancetre[v] > debut[parent[v]]:
+                p.append([parent[v], v])
+    return p
