@@ -69,6 +69,13 @@ class Graphe(object):
         """
         return self.poids[(u, v)]
 
+    def nom_sommet(self, sommet):
+        return self.noms[sommet]
+
+    def nom_sommets(self):
+        return {
+            tuple((self.noms[u], u)) for u in self.dictionnaire
+        }
 
     def boucles(self):
         """Renvoie les boucles du graphe, c'est-à-dire les arêtes reliant un
