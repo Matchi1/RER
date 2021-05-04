@@ -1,8 +1,36 @@
 - Graphe.py 								(OK mais vérif à faire)
-- charger_donnees (function)
-- points_articulations (function)
-- ponts (function)
+- charger_donnees (function)				OK
+- points_articulations (function)			OK
+- ponts (function)							OK
 - amelioration_ponts (function)
 - amelioration_points_articulations (function)
-- Elimination des ponts
-- Elimination des points d'articulations
+
+
+étapes amelioration_ponts:
+	- détection des CSP dans le graphe en utilisant les ponts (fonctions ponts)
+	les CSP seront stocker dans un dictionnaire (feuille1, feuille2,
+	non_feuille ...)
+	- créer des arêtes arbitrairement (ordre alphabétique au début)
+	entre les différentes feuilles (u -> v -> w avec u, v, w appartenant à des
+	CSP différents)
+	- connecter les CSP qui ont des sommets isolés (donc si le graphe n'est
+	  pas connexe). À exécuter en fin de fonction.
+	  la connexion doit se faire de entre des CSP qui ne sont pas des feuilles
+
+fonctions:
+	- def amelioration_ponts(graphe) "fonction principale"
+	- def csp(graphe, ponts)		 "renvoie la liste des CSP sous forme de
+	  dictionnaire"
+	- def suppression_ponts(graphe, csp) "supprime les ponts à partir du csp
+	  et connecte le graphe qui non connexe"
+
+étapes amelioration_points_articulation:
+	- détection des racines dans le graphe (solution: on relie les descendants
+	  entre eux)
+	- on détermine ensuite les points d'articulations les plus profond dans
+	  l'arbre. (solution: on connecte ensuite les sommets issues de ces points
+	  avec la racine de l'arbre pour éliminer tous les points d'articulation
+	  entre la racine et le sommet)
+
+fonctions:
+	- def amelioration_points_articulation(graphe) "fonction principale"

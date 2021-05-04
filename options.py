@@ -33,7 +33,7 @@ def liste_stations(graphe):
     taille = len(graphe.sommets())
     print(f'le réseau contient les {taille} stations suivantes:\n')
     for nom, station in sorted(graphe.nom_sommets()):
-        print(f'{nom} ({station})')
+        print(f'\t{nom} ({station})')
     print()
 
 def articulations(graphe):
@@ -43,7 +43,7 @@ def articulations(graphe):
     indice = 1
     print(f'Le réseau contient les {taille} points d\'articulation suivants')
     for station in sorted(nom_stations):
-        print(f'{indice} : {station}')
+        print(f'\t{indice} : {station}')
         indice += 1
     print()
 
@@ -53,40 +53,77 @@ def afficher_ponts(graphe):
     taille = len(nom_stations)
     print(f'Le réseau contient les {taille} ponts suivants')
     for s1, s2 in sorted(nom_stations):
-        print(f'- {s1} -- {s2}')
+        print(f'\t- {s1} -- {s2}')
     print()
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--metro', nargs='*', default=None)
-parser.add_argument('--rer', nargs='*', default=None)
-parser.add_argument('--liste-stations', action='store_true')
-parser.add_argument('--articulations', action='store_true')
-parser.add_argument('--ponts', action='store_true')
-parser.add_argument('--ameliorer-articulations', action='store_true')
-parser.add_argument('--ameliorer-ponts', action='store_true')
+def afficher_amelioration_points_articulation(graphe):
+    aretes = amelioration_points_articulation(graphe)
+    nom_stations = [(graphe.nom_sommet(u), graphe.nom_sommet(v)) for u, v in aretes]
+    print(f'On peut éliminer tous les points d\'articulation du réseau en rajoutant les {len(aretes)} arêtes suivantes:')
+    for u, v in sorted(nom_stations):
+        print(f'\t- {u} -- {v}')
+    print()
 
-args = parser.parse_args('--metro 7b --liste-stations --ponts --articulations'.split())
+def afficher_amelioration_ponts(graphe):
+    aretes = amelioration_ponts(graphe)
+    nom_stations = [(graphe.nom_sommet(u), graphe.nom_sommet(v)) for u, v in aretes]
+    print(f'On peut éliminer tous les ponts du réseau en rajoutant les {len(aretes)} arêtes suivantes:')
+    for u, v in sorted(nom_stations):
+        print(f'\t- {u} -- {v}')
+    print()
 
-G = Graphe()
-if args.metro != None:
-    print(f'Chargement des lignes {args.metro} de metro ...', end=' ')
-    metro(G, args)
+def create_argparser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--metro', nargs='*', default=None)
+    parser.add_argument('--rer', nargs='*', default=None)
+    parser.add_argument('--liste-stations', action='store_true')
+    parser.add_argument('--articulations', action='store_true')
+    parser.add_argument('--ponts', action='store_true')
+    parser.add_argument('--ameliorer-articulations', action='store_true')
+    parser.add_argument('--ameliorer-ponts', action='store_true')
+    return parser
+
+def chargement_metro(graphe):
+    if args.metro == []:
+        print(f'Chargement de toutes les lignes de metro ...', end=' ')
+    else:
+        print(f'Chargement des lignes {args.metro} de metro ...', end=' ')
+    metro(graphe, args)
     print('terminé')
-if args.rer != None:
-    print(f'Chargement des lignes {args.rer} de rer ...', end=' ')
-    rer(G, args)
+
+def chargement_rer(graphe):
+    if args.rer == []:
+        print(f'Chargement de toutes les lignes de rer ...', end=' ')
+    else:
+        print(f'Chargement des lignes {args.rer} de rer ...', end=' ')
+    rer(graphe, args)
     print('terminé')
-nombre_sommets = len(G.sommets())
-nombre_aretes = len(G.aretes())
-print(f'Le réseau contient {nombre_sommets} et {nombre_aretes} arêtes.\n')
-if args.liste_stations:
-    liste_stations(G)
-if args.articulations:
-    articulations(G)
-if args.ponts:
-    afficher_ponts(G)
-if args.ameliorer_articulations:
-    pass
-if args.ameliorer_ponts:
-    pass
+
+def options(parser):
+    G = Graphe()
+    if args.metro != None:
+        chargement_metro(G)
+    if args.rer != None:
+        chargement_rer(G)
+    print(f'Le réseau contient {len(G.sommets())} sommets et {len(G.aretes())} arêtes.\n')
+    if args.liste_stations:
+        liste_stations(G)
+    if args.articulations:
+        articulations(G)
+    if args.ponts:
+        afficher_ponts(G)
+    if args.ameliorer_articulations:
+        afficher_amelioration_points_articulation(G)
+    if args.ameliorer_ponts:
+        afficher_amelioration_ponts(G)
+parser = create_argparser()
+args = parser.parse_args()
+
+def main():
+    parser = create_argparser()
+    args = parser.parse_args()
+    options(args)
+
+if __name__ == "__main__":
+    main()
 

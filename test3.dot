@@ -1,0 +1,32 @@
+graph G {
+    a;
+    b;
+    c;
+    d;
+    e;
+    f;
+    g;
+    h;
+    i;
+    j;
+    k;
+    l;
+    m;
+    n;
+    a -- b;
+    a -- d;
+    b -- c;
+    c -- d;
+    c -- e;
+    e -- f;
+    f -- g;
+    g -- h;
+    g -- i;
+    g -- m;
+    i -- j;
+    i -- k;
+    k -- l;
+    l -- m;
+    l -- n;
+    m -- n;
+}

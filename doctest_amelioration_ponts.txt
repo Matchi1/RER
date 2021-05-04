@@ -6,6 +6,7 @@ Rajoutez éventuellement ci-dessous les imports nécessaires:
 
 >>> from graphe import *
 >>> from fragilite import *
+>>> from ameliorations import *
 
 Exemple de l'énoncé:
 

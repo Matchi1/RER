@@ -31,6 +31,8 @@ class Graphe(object):
         self.dictionnaire[v].add(u)
         self.poids[(u, v)] = poids
         self.poids[(v, u)] = poids
+        self.lignes[(u, v)] = "inconnu"
+        self.lignes[(v, u)] = "inconnu"
 
     def ajouter_aretes(self, iterable):
         """Ajoute toutes les arêtes de l'itérable donné au graphe. N'importe
@@ -155,3 +157,15 @@ class Graphe(object):
     def voisins(self, sommet):
         """Renvoie l'ensemble des voisins du sommet donné."""
         return self.dictionnaire[sommet]
+
+def export_dot(graphe):
+    """Renvoie une chaîne encodant le graphe au format dot."""
+    chaine = "graph G {\n"
+    for s in sorted(graphe.sommets()):
+        chaine += "    {};\n".format(s)
+    for u, v, p in sorted(graphe.aretes()):
+        chaine += "    {} -- {};\n".format(u, v)
+    for s in sorted(graphe.boucles()):
+        chaine += "    {} -- {};\n".format(s, s)
+    chaine += "}"
+    return chaine 
