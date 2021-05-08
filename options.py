@@ -106,6 +106,11 @@ def options(parser):
     if args.rer != None:
         chargement_rer(G)
     print(f'Le réseau contient {len(G.sommets())} sommets et {len(G.aretes())} arêtes.\n')
+    d, p, a = numerotations(G)
+    print(d)
+    print(p)
+    print(a)
+    print(len(ponts(G)))
     if args.liste_stations:
         liste_stations(G)
     if args.articulations:

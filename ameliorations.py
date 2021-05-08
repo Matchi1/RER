@@ -27,62 +27,63 @@ def csp(graphe, ponts):
     csp_dict = dict()
     feuilles = dict()
     visite = {s : False for s in sorted(graphe.sommets())}
-    indice = 0
-    def aux(graphe, s, s_evite, ponts):
-        nonlocal indice, est_feuille
-        csp_dict[indice].add(s)
-        visite[s] = True
+    indice = compte_ext = 0
+    def aux(graphe, depart, ponts):
+        nonlocal indice, compte_ext
+        pas_visite = None
+        csp_dict[indice].add(depart)
+        visite[depart] = True
         for u, v in ponts:
-            if s == u or s == v:
-                feuilles[indice] = False
-                return
-        for v in sorted(graphe.voisins(s)):
-            if v != s_evite and not visite[v]:
-                aux(graphe, v, s_evite, ponts)
+            if depart == u:
+                pas_visite = v
+                compte_ext += 1
+            elif depart == v:
+                pas_visite = u
+                compte_ext += 1
+        for v in sorted(graphe.voisins(depart)):
+            if v != pas_visite and not visite[v]:
+                aux(graphe, v, ponts)
         return
 
-    for u, v in ponts:
-        est_feuille = True
-        autres_ponts = list(ponts)
-        autres_ponts.remove((u, v))
-        if not visite[u]:
+    for s in sorted(graphe.sommets()):
+        if not visite[s]:
             csp_dict[indice] = set()
-            feuilles[indice] = True
-            aux(graphe, u, v, autres_ponts)
+            aux(graphe, s, ponts)
+            if compte_ext > 1:
+                feuilles[indice] = False
+            else:
+                feuilles[indice] = True
             csp_dict[indice] = sorted(csp_dict[indice])
-            indice += 1
-        if not visite[v]:
-            csp_dict[indice] = set()
-            feuilles[indice] = True
-            aux(graphe, v, u, autres_ponts)
-            csp_dict[indice] = sorted(csp_dict[indice])
+            compte_ext = 0
             indice += 1
     return csp_dict, feuilles
 
 def suppression_csp(graphe, ponts, csp_liste, feuilles):
     chemin = list()
     aretes = list()
-    voisins = None
     for i in feuilles:
-        chemin.append(csp_liste[i][0])
+        if feuilles[i]:
+            chemin.append(csp_liste[i][0])
             
     for i in range(len(chemin) - 1):
-        if (chemin[i], chemin[i + 1]) not in ponts:
-            aretes.append((chemin[i], chemin[i + 1]))
-        else:
-            voisins = graphe.voisins(chemin[i])
+        u, v = sorted((chemin[i], chemin[i + 1]))
+        a_changer = False
+        if (u, v) in ponts:
+            voisins = graphe.voisins(u)
             if len(voisins) > 1:
-                for v in voisins:
-                    if v != chemin[i + 1]:
-                        chemin[i] = v
-                        break
-            else:
-                voisins = graphe.voisins(chemin[i + 1])
-                for v in voisins:
-                    if v != chemin[i]:
-                        chemin[i + 1] = v
-                        break
-            aretes.append((chemin[i], chemin[i + 1]))
+                for voisin in voisins:
+                    if voisin != v:
+                        u = voisin
+                        a_changer = True
+                    break
+            voisins = graphe.voisins(v)
+            if len(voisins) > 1:
+                for voisin in voisins:
+                    if voisin != u:
+                        v = voisin
+                        a_changer = True
+                    break
+        aretes.append((u, v))
     return aretes
 
 def amelioration_ponts(graphe):

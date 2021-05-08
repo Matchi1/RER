@@ -48,5 +48,5 @@ def ponts(graphe):
     for v in sorted(graphe.sommets()): 
         if parent[v] != None:
             if ancetre[v] > debut[parent[v]]:
-                p.append((parent[v], v))
+                p.append(tuple(sorted((parent[v], v))))
     return p
